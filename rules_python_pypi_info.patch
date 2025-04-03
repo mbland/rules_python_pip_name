@@ -1,0 +1,151 @@
+diff --git c/python/defs.bzl i/python/defs.bzl
+index bdf5dae2..fbacf101 100644
+--- c/python/defs.bzl
++++ i/python/defs.bzl
+@@ -20,6 +20,7 @@ load("//python:py_runtime.bzl", _py_runtime = "py_runtime")
+ load("//python:py_runtime_info.bzl", internal_PyRuntimeInfo = "PyRuntimeInfo")
+ load("//python:py_runtime_pair.bzl", _py_runtime_pair = "py_runtime_pair")
+ load("//python:py_test.bzl", _py_test = "py_test")
++load("//python:pypi_info.bzl", _PypiInfo = "PypiInfo")
+ load(":current_py_toolchain.bzl", _current_py_toolchain = "current_py_toolchain")
+ load(":py_import.bzl", _py_import = "py_import")
+ 
+@@ -29,6 +30,8 @@ PyInfo = _PyInfo
+ 
+ PyRuntimeInfo = internal_PyRuntimeInfo
+ 
++PypiInfo = _PypiInfo
++
+ current_py_toolchain = _current_py_toolchain
+ 
+ py_import = _py_import
+diff --git c/python/private/py_library.bzl i/python/private/py_library.bzl
+index f6c7b125..ccbfbeaf 100644
+--- c/python/private/py_library.bzl
++++ i/python/private/py_library.bzl
+@@ -30,6 +30,7 @@ load(":flags.bzl", "AddSrcsToRunfilesFlag", "PrecompileFlag")
+ load(":precompile.bzl", "maybe_precompile")
+ load(":py_cc_link_params_info.bzl", "PyCcLinkParamsInfo")
+ load(":py_internal.bzl", "py_internal")
++load(":pypi_info.bzl", "make_pypi_info")
+ load(":rule_builders.bzl", "ruleb")
+ load(
+     ":toolchain_types.bzl",
+@@ -126,6 +127,10 @@ def py_library_impl(ctx, *, semantics):
+     ]
+     if builtins_py_info:
+         providers.append(builtins_py_info)
++
++    pypi_info = make_pypi_info(ctx)
++    if pypi_info:
++        providers.append(pypi_info)
+     return providers
+ 
+ _DEFAULT_PY_LIBRARY_DOC = """
+diff --git c/python/private/pypi_info.bzl i/python/private/pypi_info.bzl
+new file mode 100644
+index 00000000..44808be9
+--- /dev/null
++++ i/python/private/pypi_info.bzl
+@@ -0,0 +1,76 @@
++# Copyright 2025 The Bazel Authors. All rights reserved.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++"""PypiInfo provider containing PyPI metadata for py_library targets."""
++
++def _pypi_info_init_banned(*_args, **_kwargs):
++    fail("Do not call PypiInfo(). Use make_pypi_info() instead.")
++
++PypiInfo, _new_pypi_info = provider("""
++PyPI metadata for py_library targets and their dependencies.
++
++`pip.parse` generates repositories that contain `py_library` targets for
++external PyPI dependencies. These `py_library` targets contain `pypy_name=...`
++and `pypy_version=...` tags, which become the `name` and `version` properties of
++this provider.
++
++Direct and transitive dependencies of the current target that contain `PypiInfo`
++become members of this target's `PypiInfo.pypy_deps` depset.
++""",
++    fields = {
++        "name": """
++:type: string
++
++Name of the PyPI package represented by the py_library.
++
++::::
++""",
++        "version": """
++:type: string
++
++Version of the PyPI package represented by the py_library.
++
++::::
++""",
++        "pypi_deps": """
++:type: depset[Target]
++
++Depset of transitive PyPI dependency targets.
++
++::::
++""",
++    },
++    init = _pypi_info_init_banned,
++)
++
++def make_pypi_info(ctx):
++    """Creates a PypiInfo provider for py_library targets.
++
++    See the PypiInfo docstring for details.
++
++    Args:
++        ctx: Rule ctx object
++
++    Returns:
++        a PypiInfo provider if the rule's tags contain `pypi_*` values or if any
++        of its dependencies provide PypiInfo, else None
++    """
++    tags = [t.split("=") for t in ctx.attr.tags if t.startswith("pypi_")]
++    direct_deps = [dep for dep in ctx.attr.deps if PypiInfo in dep]
++    indirect_deps = [dep[PypiInfo].pypi_deps for dep in direct_deps]
++
++    return _new_pypi_info(
++        pypi_deps = depset(direct = direct_deps, transitive = indirect_deps),
++        **{k.removeprefix("pypi_"): v for k, v in tags}
++    ) if (tags or direct_deps or indirect_deps) else None
+diff --git c/python/pypi_info.bzl i/python/pypi_info.bzl
+new file mode 100644
+index 00000000..27aedf56
+--- /dev/null
++++ i/python/pypi_info.bzl
+@@ -0,0 +1,19 @@
++# Copyright 2025 The Bazel Authors. All rights reserved.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++"""Public entry point for PyInfo."""
++
++load("//python/private:pypi_info.bzl", _PypiInfo = "PypiInfo")
++
++PypiInfo = _PypiInfo
