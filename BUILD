@@ -1,4 +1,4 @@
-load("//:pip_tags.bzl", "pip_names", "pip_names_query")
+load("//:pip_tags.bzl", "pip_and_srcs_lists", "pip_names_query")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:py_library.bzl", "py_library")
 
@@ -11,9 +11,11 @@ compile_pip_requirements(
 py_library(
     name = "testlib",
     deps = [
+        "//foo",
+        "//bar",
+        "//baz",
         "@pips//pyfakefs",
         "@pips//urllib3",
-        "@pips//zipp",
     ],
 )
 
@@ -22,8 +24,9 @@ pip_names_query(
     target = ":testlib",
 )
 
-pip_names(
-    name = "names",
+pip_and_srcs_lists(
+    name = "lists",
     deps = [":testlib"],
-    output = "names.txt",
+    pip_list = "pip-list.txt",
+    srcs_list = "srcs-list.txt",
 )
