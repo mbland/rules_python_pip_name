@@ -191,21 +191,17 @@ notes are discovered by `gitk`, but the string doesn't show up in the diffs. I
 used `git show -p <commit>` and then searched for `"pypi_name="` or the previous
 file name to verify what had happened.
 
-<!-- markdownlint-disable MD034 -->
-
 | PR  | commit | file |
 | :-- | :----- | :--- |
-| bazel-contrib/rules_python#2003 | https://github.com/bazel-contrib/rules_python/commit/04a803c286451f7ad782369b7c529a46e6ad5c9e | `python/private/pypi/whl_library.bzl` |
-| bazel-contrib/rules_python#1336 | https://github.com/bazel-contrib/rules_python/commit/608ddb75057736f3f47095f5fe300f8a13a98bd0 | `python/pip_install/pip_repository.bzl` |
-| bazel-contrib/rules_python#953  | https://github.com/bazel-contrib/rules_python/commit/70cce26432187a60b4e950118791385e6fb3c26f | `python/pip_install/tools/wheel_installer/wheel_installer.py` (renamed file) |
-| bazel-contrib/rules_python#946  | https://github.com/bazel-contrib/rules_python/commit/50ba3ed843b710259b9a4ca4634f4026a2294af2 | `python/pip_install/extract_wheels/wheel_installer.py` (moved to new file) |
-| bazel-contrib/rules_python#937  | https://github.com/bazel-contrib/rules_python/commit/72ac64a9966d3e2017393b9280a4d4575c538235 | `python/pip_install/tools/lib/bazel.py` |
-| bazel-contrib/rules_python#743  | https://github.com/bazel-contrib/rules_python/commit/4984423f72d289d4dd1db20b6b6b7637d61e5959 | `python/pip_install/extract_wheels/bazel.py` (renamed file) |
-| bazel-contrib/rules_python#700  | https://github.com/bazel-contrib/rules_python/commit/9b8ab1ea442064ee5ae5cafc1b66137281813c81 | `python/pip_install/extract_wheels/lib/bazel.py` |
-| bazel-contrib/rules_python#589  | https://github.com/bazel-contrib/rules_python/commit/7740b22d0bae942af0797967f2617daa19834cb3 | `python/pip_install/extract_wheels/lib/bazel.py` |
-| bazel-contrib/rules_python#530  | https://github.com/bazel-contrib/rules_python/commit/c303849892a2c716a2582172be43ba525feac23d | `python/pip_install/extract_wheels/lib/bazel.py` |
-
-<!-- markdownlint-enable MD034 -->
+| bazel-contrib/rules_python#2003 | [04a803c](https://github.com/bazel-contrib/rules_python/commit/04a803c286451f7ad782369b7c529a46e6ad5c9e) | `python/private/pypi/whl_library.bzl` |
+| bazel-contrib/rules_python#1336 | [608ddb7](https://github.com/bazel-contrib/rules_python/commit/608ddb75057736f3f47095f5fe300f8a13a98bd0) | `python/pip_install/pip_repository.bzl` |
+| bazel-contrib/rules_python#953  | [70cce26](https://github.com/bazel-contrib/rules_python/commit/70cce26432187a60b4e950118791385e6fb3c26f) | `python/pip_install/tools/wheel_installer/wheel_installer.py` (renamed file) |
+| bazel-contrib/rules_python#946  | [50ba3ed](https://github.com/bazel-contrib/rules_python/commit/50ba3ed843b710259b9a4ca4634f4026a2294af2) | `python/pip_install/extract_wheels/wheel_installer.py` (moved to new file) |
+| bazel-contrib/rules_python#937  | [72ac64a](https://github.com/bazel-contrib/rules_python/commit/72ac64a9966d3e2017393b9280a4d4575c538235) | `python/pip_install/tools/lib/bazel.py` |
+| bazel-contrib/rules_python#743  | [4984423](https://github.com/bazel-contrib/rules_python/commit/4984423f72d289d4dd1db20b6b6b7637d61e5959) | `python/pip_install/extract_wheels/bazel.py` (renamed file) |
+| bazel-contrib/rules_python#700  | [9b8ab1e](https://github.com/bazel-contrib/rules_python/commit/9b8ab1ea442064ee5ae5cafc1b66137281813c81) | `python/pip_install/extract_wheels/lib/bazel.py` |
+| bazel-contrib/rules_python#589  | [7740b22](https://github.com/bazel-contrib/rules_python/commit/7740b22d0bae942af0797967f2617daa19834cb3) | `python/pip_install/extract_wheels/lib/bazel.py` |
+| bazel-contrib/rules_python#530  | [c303849](https://github.com/bazel-contrib/rules_python/commit/c303849892a2c716a2582172be43ba525feac23d) | `python/pip_install/extract_wheels/lib/bazel.py` |
 
 [Bazel's query language]: https://bazel.build/query/guide
 [File.owner]: https://bazel.build/rules/lib/builtins/File#owner
