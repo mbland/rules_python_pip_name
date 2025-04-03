@@ -149,7 +149,7 @@ retrieving the name of a PyPI module. From the `PypiInfo` docstring:
 Frank P's original code also checked [File.owner] values to partition source
 files based on their [Label.repo_name]. `pip_and_srcs_lists` iterates over the
 transitive sources from [PyInfo][] and compares their `file.owner.repo_name`
-values match `_THIS_REPO`.
+values to `_THIS_REPO`.
 
 ```sh
 $ bazel build //:lists
@@ -178,8 +178,6 @@ baz/baz.py
 foo/__init__.py
 foo/foo.py
 ```
-
-
 
 ## History of the `pypi_*` tags
 
