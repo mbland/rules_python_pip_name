@@ -98,3 +98,32 @@ pips_from_metadata_files_aspect = rule(
         "aspect_list": attr.output(),
     }
 )
+
+def _requirements_impl(ctx):
+    files = [
+        f
+        for f in _collect_runfiles(ctx.attr.deps).to_list()
+        if f.basename == "METADATA" and f.dirname.endswith(".dist-info")
+    ]
+    outfile = ctx.outputs.requirements_file
+
+    ctx.actions.run_shell(
+        inputs = files,
+        outputs = [outfile],
+        command = (
+            "grep \"^Name: \" \"%s\" | " % (
+                "\" \"".join([f.path for f in files])
+            ) +
+            "cut -d\" \" -f2 | " +
+            "tr \"[:upper:]\" \"[:lower:]\" | " +
+            "sort >> " + outfile.path
+        ),
+    )
+
+requirements = rule(
+    implementation = _requirements_impl,
+    attrs = {
+        "deps": attr.label_list(),
+        "requirements_file": attr.output(mandatory = True),
+    }
+)

@@ -219,6 +219,21 @@ urllib3
 zipp
 ```
 
+### `//:requirements_file`
+
+[This comment in the #python thread in the Bazel Slack workspace][slack-2]
+inspired the `requirements` rule. It uses [ctx.actions.run_shell][run_shell] to
+extract names from `*.dist-info/METADATA` files with a shell pipeline. This
+output would be suitable for the [requires_file attribute of
+py_wheel][req_file].
+
+`requirements` is also a [rule][], rather than [aspect][]. Updating the
+implementation to use an aspect would be easy, but I don't see the need for it
+at this point.
+
+[ctx.actions.run][run] could run a dedicated program to produce a more robust
+[requirements.txt][] file.
+
 ## History of the `pypi_*` tags
 
 I used [gitk][] in a local clone of [rules_python][] to search for a commit with
@@ -263,12 +278,17 @@ file name to verify what had happened.
 [query.sh]: ./query.sh
 [repository_ctx.read]: https://bazel.build/rules/lib/builtins/repository_ctx#read
 [repository_rule]: https://bazel.build/external/repo
+[req_file]: https://rules-python.readthedocs.io/en/latest/api/rules_python/python/packaging.html#py_wheel_rule.requires_file
+[requirements.txt]: https://setuptools.pypa.io/en/latest/userguide/dependency_management.html#declaring-dependencies
 [rule]: https://bazel.build/extending/rules
 [rules_python]: https://github.com/bazel-contrib/rules_python
 [rules_python_pypi_info.patch]: ./rules_python_pypi_info.patch
+[run]: https://bazel.build/rules/lib/builtins/actions#run
+[run_shell]: https://bazel.build/rules/lib/builtins/actions#run_shell
 [single_version_override]: https://bazel.build/rules/lib/globals/module#single_version_override
 [slack-0]: https://bazelbuild.slack.com/archives/C014RARENH0/p1743540276719369
 [slack-1]: https://bazelbuild.slack.com/archives/CA306CEV6/p1743702761960199
+[slack-2]: https://bazelbuild.slack.com/archives/CA306CEV6/p1743792236487469?thread_ts=1743702761.960199&cid=CA306CEV6
 [standard Bazel providers]: https://bazel.build/rules/lib/providers
 [tags]: https://bazel.build/reference/be/common-definitions#common-attributes
 [whl_library]: https://github.com/bazel-contrib/rules_python/blob/1.3.0/python/private/pypi/whl_library.bzl#L363-L366

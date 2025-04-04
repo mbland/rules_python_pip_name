@@ -4,6 +4,7 @@ load(
     "pip_names_query",
     "pips_from_metadata_files",
     "pips_from_metadata_files_aspect",
+    "requirements",
 )
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:py_library.bzl", "py_library")
@@ -47,4 +48,10 @@ pips_from_metadata_files_aspect(
     name = "aspect",
     deps = [":testlib"],
     aspect_list = "aspect-list.txt",
+)
+
+requirements(
+    name = "requirements_file",
+    deps = [":testlib"],
+    requirements_file = "requirements.txt",
 )
