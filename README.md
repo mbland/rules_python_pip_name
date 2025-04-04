@@ -179,7 +179,7 @@ foo/__init__.py
 foo/foo.py
 ```
 
-### `//:pips_from_metadata_files` and `//:pips_from_metadata_files_aspect`
+### `//:metas` and `//:aspect`
 
 Discussion on [the thread I started in the #python channel of the Bazel Slack
 workspace on 2025-03-04][slack-1] yielded the idea of scanning for
